@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Client {
+    -nom : string
+    -rueClient : string
+    -CPClient : string
+    -villeClient : string
+    -paysClient : string
+    -telephoneClient : string
+}
+
+class Commande {
+    -dateCommande : DateTime
+    -noCommande : int
+    -noClient : int
+    -modalitePaiement : string
+    -modePaiement : string
+}
+
+class Produit {
+    -refProduit : int
+    -description : string
+    -quantite : int
+    -unite : string
+    -prixUnitHT : int
+    -pourcentageTVA : int
+    -totalProduitTVA : int
+    -totalProduitTTC : int
+}
+
+class Total {
+    -totalHT : int
+    -totalTVA : int
+    -totalTTC : int
+}
+
+Commande --> Client
+Commande --> Total
+Total --> Produit
+
+@enduml
