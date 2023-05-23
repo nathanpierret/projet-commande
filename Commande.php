@@ -1,4 +1,7 @@
 <?php
+require_once "./src/Client.php";
+require_once "./src/ProduitComm.php";
+require_once "./src/Produit.php";
 
 class Commande {
 
@@ -45,36 +48,6 @@ class Commande {
         $this->client = $client;
     }
 
-    public function getTotalHT(): int
-    {
-        return $this->totalHT;
-    }
-
-    public function setTotalHT(int $totalHT): void
-    {
-        $this->totalHT = $totalHT;
-    }
-
-    public function getTotalTVA(): int
-    {
-        return $this->totalTVA;
-    }
-
-    public function setTotalTVA(int $totalTVA): void
-    {
-        $this->totalTVA = $totalTVA;
-    }
-
-    public function getTotalTTC(): int
-    {
-        return $this->totalTTC;
-    }
-
-    public function setTotalTTC(int $totalTTC): void
-    {
-        $this->totalTTC = $totalTTC;
-    }
-
     public function ajouterProduit(Produit $produit, int $quantite): void {
         $produitComm = new ProduitComm($quantite, $produit);
         $this->listeProduitsComms[] = $produitComm;
@@ -83,7 +56,40 @@ class Commande {
     private function totalHT(): float {
         $totalHT = 0;
         foreach ($this->listeProduitsComms as $produitComm) {
-            $totalHT += 1;
+            $totalHT += $produitComm->totalHTProduit();
         }
+        return $totalHT;
+    }
+
+    private function totalTVA(): float {
+        $totalTVA = 0;
+        foreach ($this->listeProduitsComms as $produitComm) {
+            $totalTVA += $produitComm->totalTVAProduit();
+        }
+        return $totalTVA;
+    }
+
+    private function totalTTC(): float {
+        $totalTTC = 0;
+        foreach ($this->listeProduitsComms as $produitComm) {
+            $totalTTC += $produitComm->totalTTCProduit();
+        }
+        return $totalTTC;
+    }
+
+    public function editer(): void {
+        echo "Commande n°".$this->noCommande." du ".$this->dateCommande->format("d/m/Y").PHP_EOL;
+        echo "Client : ".$this->client->getNomClient()." (".$this->client->getNoClient().")".PHP_EOL;
+        echo "\t".$this->client->getRueAdrClient().PHP_EOL;
+        echo "\t".$this->client->getCPAdrClient()." ".$this->client->getVilleAdrClient().PHP_EOL;
+        echo PHP_EOL;
+        foreach ($this->listeProduitsComms as $produitComm) {
+            echo $produitComm->getProduit()->getRefProduit()." - ".$produitComm->getProduit()->getDescription()." - ".$produitComm->getQuantite()." - "
+                .$produitComm->getProduit()->getUnite()." - ".$produitComm->getProduit()->getPrixUnitHT()."€ - ".$produitComm->getProduit()->getPourcentageTVA().
+                "% - ".$produitComm->totalTVAProduit()."€ - ".$produitComm->totalTTCProduit()."€".PHP_EOL;
+        }
+        echo "\t\t\t"."Total HT : ".$this->totalHT()."€".PHP_EOL;
+        echo "\t\t\t"."Total TVA : ".$this->totalTVA()."€".PHP_EOL;
+        echo "\t\t\t"."Total TTC : ".$this->totalTTC()."€";
     }
 }

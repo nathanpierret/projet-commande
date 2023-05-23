@@ -1,4 +1,5 @@
 <?php
+require_once "./src/Produit.php";
 
 class ProduitComm {
 
